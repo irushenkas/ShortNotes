@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shortnotes.ui.theme.ShortNotesTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -144,7 +145,7 @@ fun showAddButton(
             end = 12.dp)
     )
     { Text(
-        text = "New",
+        text = stringResource(R.string.add_note),
         fontSize = 14.sp
     ) }
 }
@@ -165,7 +166,7 @@ fun showSendButton(){
             end = 12.dp)
     )
     { Text(
-        text = "Send data",
+        text = stringResource(R.string.send_email),
         fontSize = 14.sp
     ) }
 }
@@ -185,7 +186,7 @@ fun showCreateNoteButton(
             end = 12.dp)
     )
     { Text(
-        text = "Create",
+        text = stringResource(R.string.create),
         fontSize = 14.sp
     ) }
 }
@@ -204,7 +205,7 @@ fun showCancelButton(
             end = 12.dp)
     )
     { Text(
-        text = "Cancel",
+        text = stringResource(R.string.cancel),
         fontSize = 14.sp
     ) }
 }
