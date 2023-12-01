@@ -13,7 +13,7 @@ private val empty = Note(
     date = ""
 )
 
-class ScheduleViewModel(application: Application) : AndroidViewModel(application) {
+class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val noteRepository: NoteRepository = NoteRepositoryImpl(application)
 
     val data = noteRepository.getAll()
@@ -29,8 +29,4 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     fun removeById(id: Long) {
         noteRepository.removeById(id)
     }
-
-
-
-
 }

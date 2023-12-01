@@ -1,11 +1,11 @@
 package com.example.shortnotes.repository
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.example.shortnotes.db.AppDb
 import com.example.shortnotes.dto.Note
 import com.example.shortnotes.entity.NoteEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class NoteRepositoryImpl(
     context: Context,
@@ -13,12 +13,8 @@ class NoteRepositoryImpl(
 
     private val dao = AppDb.getInstance(context = context).noteDao()
 
-    override fun getAll(): LiveData<List<Note>> {
-        return dao.getAll().map { list ->
-            list.map {
-                it.toDto()
-            }
-        }
+    override fun getAll(): Flow<List<Note>> {
+        return dao.getAll().map { item -> item.map { i->i.toDto() } }
     }
 
     override fun save(note: Note) {

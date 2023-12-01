@@ -1,15 +1,15 @@
 package com.example.shortnotes.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.shortnotes.entity.NoteEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM NoteEntity ORDER BY id DESC")
-    fun getAll(): LiveData<List<NoteEntity>>
+    fun getAll(): Flow<List<NoteEntity>>
 
     @Insert
     fun insert(note: NoteEntity)

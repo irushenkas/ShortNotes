@@ -1,5 +1,6 @@
 package com.example.shortnotes
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.shortnotes.dto.Note
+import com.example.shortnotes.viewmodel.NoteViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,17 +101,20 @@ fun NewNoteScreen(
 
 @Composable
 fun showDataList(){
-    val langs = listOf("Kotlin", "Java", "JavaScript", "Scala",
-        "python", "c++", "c", "PHP", "Pascal", "C#")
+    val context = LocalContext.current
+    val notesViewModel = NoteViewModel(context.applicationContext as Application)
+    val notes by notesViewModel.data.collectAsState(
+        initial = emptyList()
+    )
     LazyColumn {
-        items(items = langs, itemContent = { lang ->
-            showText(text = lang)
+        items(items = notes, itemContent = { note ->
+            showText(note = note)
         })
     }
 }
 
 @Composable
-fun showText(text: String){
+fun showText(note: Note){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,13 +123,13 @@ fun showText(text: String){
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "17.11.2020",
+            text = note.date,
             modifier = Modifier
                 .padding(0.dp, 4.dp, 0.dp, 0.dp),
             textAlign = TextAlign.Left,
         )
         Text(
-            text = text,
+            text = note.text,
             fontSize = 20.sp,
             modifier = Modifier
                 .padding(0.dp, 4.dp, 0.dp, 0.dp),
