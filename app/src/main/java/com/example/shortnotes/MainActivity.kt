@@ -1,0 +1,210 @@
+package com.example.shortnotes
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.shortnotes.ui.theme.ShortNotesTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            ShortNotesTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    val navController = rememberNavController()
+                    NavHost(navController, startDestination = "home") {
+                        composable("home") {
+                            HomeScreen(onNewClick = {
+                                navController.navigate("new")
+                            })
+                        }
+                        composable("new") {
+                            NewNoteScreen(onShowListClick = {
+                                navController.popBackStack()
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeScreen(
+    onNewClick: () -> Unit,
+) {
+    showDataList()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.End
+    ) {
+        showAddButton(onNewClick)
+        showSendButton()
+    }
+}
+
+@Composable
+fun NewNoteScreen(
+    onShowListClick: () -> Unit,
+) {
+    var text by remember { mutableStateOf("") }
+
+    BasicTextField(
+        value = text,
+        onValueChange = {
+            text = it
+        },
+        modifier = Modifier.padding(10.dp))
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.Bottom,
+    ) {
+        showCreateNoteButton(onShowListClick, text)
+        showCancelButton(onShowListClick)
+    }
+}
+
+@Composable
+fun showDataList(){
+    val langs = listOf("Kotlin", "Java", "JavaScript", "Scala",
+        "python", "c++", "c", "PHP", "Pascal", "C#")
+    LazyColumn {
+        items(items = langs, itemContent = { lang ->
+            showText(text = lang)
+        })
+    }
+}
+
+@Composable
+fun showText(text: String){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 10.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "17.11.2020",
+            modifier = Modifier
+                .padding(0.dp, 4.dp, 0.dp, 0.dp),
+            textAlign = TextAlign.Left,
+        )
+        Text(
+            text = text,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(0.dp, 4.dp, 0.dp, 0.dp),
+        )
+    }
+}
+
+@Composable
+fun showAddButton(
+    onNewClick: () -> Unit){
+    Button(
+        onClick = {
+            onNewClick()
+        },
+        border = BorderStroke(1.dp, Color.Transparent),
+        shape = RoundedCornerShape(50),
+        modifier = Modifier.padding(
+            bottom = 6.dp,
+            end = 12.dp)
+    )
+    { Text(
+        text = "New",
+        fontSize = 14.sp
+    ) }
+}
+
+@Composable
+fun showSendButton(){
+    Button(
+        onClick = {
+            //val sendIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", "phoneNumber", null))
+            //sendIntent.putExtra("sms_body", "selectedStr")
+            //val context = LocalContext.current
+            //startActivity(sendIntent)
+        },
+        border = BorderStroke(1.dp, Color.Transparent),
+        shape = RoundedCornerShape(50),
+        modifier = Modifier.padding(
+            bottom = 6.dp,
+            end = 12.dp)
+    )
+    { Text(
+        text = "Send data",
+        fontSize = 14.sp
+    ) }
+}
+
+@Composable
+fun showCreateNoteButton(
+    onShowListClick: () -> Unit,
+    text: String){
+    Button(
+        onClick = {
+            onShowListClick()
+        },
+        border = BorderStroke(1.dp, Color.Transparent),
+        shape = RoundedCornerShape(50),
+        modifier = Modifier.padding(
+            bottom = 6.dp,
+            end = 12.dp)
+    )
+    { Text(
+        text = "Create",
+        fontSize = 14.sp
+    ) }
+}
+
+@Composable
+fun showCancelButton(
+    onShowListClick: () -> Unit){
+    Button(
+        onClick = {
+            onShowListClick()
+        },
+        border = BorderStroke(1.dp, Color.Transparent),
+        shape = RoundedCornerShape(50),
+        modifier = Modifier.padding(
+            bottom = 6.dp,
+            end = 12.dp)
+    )
+    { Text(
+        text = "Cancel",
+        fontSize = 14.sp
+    ) }
+}
