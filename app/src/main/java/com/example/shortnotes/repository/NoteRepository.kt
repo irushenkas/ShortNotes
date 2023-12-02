@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     fun getAll(): Flow<List<Note>>
-    fun save(schedule: Note)
+    fun save(note: Note)
     fun removeById(id: Long)
 }

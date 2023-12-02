@@ -1,8 +1,6 @@
 package com.example.shortnotes
 
 import android.app.Application
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +26,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.shortnotes.dto.Note
 import com.example.shortnotes.viewmodel.NoteViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +61,13 @@ class MainActivity : ComponentActivity() {
 fun HomeScreen(
     onNewClick: () -> Unit,
 ) {
-    showDataList()
+    val context = LocalContext.current
+    val notesViewModel = NoteViewModel(context.applicationContext as Application)
+    val notes by notesViewModel.data.collectAsState(
+        initial = emptyList()
+    )
+
+    showDataList(notes)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,6 +84,9 @@ fun HomeScreen(
 fun NewNoteScreen(
     onShowListClick: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val notesViewModel = NoteViewModel(context.applicationContext as Application)
+
     var text by remember { mutableStateOf("") }
 
     BasicTextField(
@@ -94,18 +103,13 @@ fun NewNoteScreen(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.Bottom,
     ) {
-        showCreateNoteButton(onShowListClick, text)
+        showCreateNoteButton(onShowListClick, text, notesViewModel)
         showCancelButton(onShowListClick)
     }
 }
 
 @Composable
-fun showDataList(){
-    val context = LocalContext.current
-    val notesViewModel = NoteViewModel(context.applicationContext as Application)
-    val notes by notesViewModel.data.collectAsState(
-        initial = emptyList()
-    )
+fun showDataList(notes: List<Note>){
     LazyColumn {
         items(items = notes, itemContent = { note ->
             showText(note = note)
@@ -180,9 +184,13 @@ fun showSendButton(){
 @Composable
 fun showCreateNoteButton(
     onShowListClick: () -> Unit,
-    text: String){
+    text: String,
+    noteViewModel: NoteViewModel){
     Button(
         onClick = {
+            val sdf = SimpleDateFormat("dd.MM.yyyy")
+            val currentDate = sdf.format(Date())
+            noteViewModel.save(text, currentDate)
             onShowListClick()
         },
         border = BorderStroke(1.dp, Color.Transparent),
