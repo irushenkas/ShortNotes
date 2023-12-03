@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM NoteEntity ORDER BY id DESC")
-    fun getAll(): Flow<List<NoteEntity>>
+    fun getFlow(): Flow<List<NoteEntity>>
+
+    @Query("SELECT * FROM NoteEntity ORDER BY id DESC")
+    fun getAll(): List<NoteEntity>
 
     @Insert
     fun insert(note: NoteEntity)

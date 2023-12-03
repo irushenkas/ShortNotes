@@ -13,8 +13,12 @@ class NoteRepositoryImpl(
 
     private val dao = AppDb.getInstance(context = context).noteDao()
 
-    override fun getAll(): Flow<List<Note>> {
-        return dao.getAll().map { item -> item.map { i->i.toDto() } }
+    override fun getFlow(): Flow<List<Note>> {
+        return dao.getFlow().map { item -> item.map { i->i.toDto() } }
+    }
+
+    override fun getAll(): List<Note> {
+        return dao.getAll().map { item -> item.toDto() }
     }
 
     override fun save(note: Note) {

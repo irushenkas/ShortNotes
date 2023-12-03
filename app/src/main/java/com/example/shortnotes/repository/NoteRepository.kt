@@ -4,7 +4,8 @@ import com.example.shortnotes.dto.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
-    fun getAll(): Flow<List<Note>>
+    fun getFlow(): Flow<List<Note>>
+    fun getAll(): List<Note>
     fun save(note: Note)
     fun removeById(id: Long)
 }

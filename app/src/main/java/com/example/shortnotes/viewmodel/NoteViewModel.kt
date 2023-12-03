@@ -9,7 +9,7 @@ import com.example.shortnotes.repository.NoteRepositoryImpl
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val noteRepository: NoteRepository = NoteRepositoryImpl(application)
 
-    val data = noteRepository.getAll()
+    val data = noteRepository.getFlow()
 
     fun save(text: String, date: String) {
         noteRepository.save(Note(0, text, date))
@@ -17,5 +17,9 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeById(id: Long) {
         noteRepository.removeById(id)
+    }
+
+    fun getAllDataForEmail(): List<Note> {
+        return noteRepository.getAll()
     }
 }

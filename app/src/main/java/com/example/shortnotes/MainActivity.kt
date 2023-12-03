@@ -1,6 +1,8 @@
 package com.example.shortnotes
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -76,7 +78,7 @@ fun HomeScreen(
         horizontalAlignment = Alignment.End
     ) {
         showAddButton(onNewClick)
-        showSendButton()
+        showSendButton(context)
     }
 }
 
@@ -161,13 +163,28 @@ fun showAddButton(
 }
 
 @Composable
-fun showSendButton(){
+fun showSendButton(context: Context){
     Button(
         onClick = {
-            //val sendIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", "phoneNumber", null))
-            //sendIntent.putExtra("sms_body", "selectedStr")
-            //val context = LocalContext.current
-            //startActivity(sendIntent)
+            val notesViewModel = NoteViewModel(context.applicationContext as Application)
+            val notes = notesViewModel.getAllDataForEmail()
+
+            val emailText = StringBuilder()
+            for(note in notes) {
+                emailText.appendLine(note.date)
+                emailText.appendLine(note.text)
+            }
+
+            val i = Intent(Intent.ACTION_SEND)
+
+            val emailAddress = arrayOf("")
+            i.putExtra(Intent.EXTRA_EMAIL,emailAddress)
+            i.putExtra(Intent.EXTRA_SUBJECT,"Text from Short Notes application")
+            i.putExtra(Intent.EXTRA_TEXT, emailText.toString())
+
+            i.type = "message/rfc822"
+
+            context.startActivity(Intent.createChooser(i,"Choose an Email client : "))
         },
         border = BorderStroke(1.dp, Color.Transparent),
         shape = RoundedCornerShape(50),
