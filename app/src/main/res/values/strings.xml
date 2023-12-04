@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">ShortNotes</string>
+    <string name="app_title">Short Notes</string>
     <string name="add_note">New</string>
     <string name="send_email">Send Email</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="email_title">Text from Short Notes application</string>
 </resources>

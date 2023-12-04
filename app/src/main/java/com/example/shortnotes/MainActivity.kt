@@ -13,6 +13,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
@@ -60,6 +63,33 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun showTopAppBar(context: Context) {
+    val emailTitle = stringResource(R.string.email_title)
+
+    TopAppBar(
+        title = {
+            Text(stringResource(R.string.app_title))
+        },
+        actions = {
+            IconButton(onClick = { /* do something */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Localized description"
+                )
+            }
+            IconButton(onClick = {
+                sendEmail(context, emailTitle)
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Email,
+                    contentDescription = "Localized description"
+                )
+            }
+        },
+    )
+}
+
+@Composable
 fun HomeScreen(
     onNewClick: () -> Unit,
 ) {
@@ -69,17 +99,15 @@ fun HomeScreen(
         initial = emptyList()
     )
 
-    showDataList(notes)
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.End
-    ) {
-        showAddButton(onNewClick)
-        showSendButton(context)
-    }
+    Scaffold(
+        topBar = {
+            showTopAppBar(context)
+        },
+        content = { padding ->
+            showDataList(notes, padding)
+            showAddButton(onNewClick)
+        }
+    )
 }
 
 @Composable
@@ -88,31 +116,43 @@ fun NewNoteScreen(
 ) {
     val context = LocalContext.current
     val notesViewModel = NoteViewModel(context.applicationContext as Application)
-
     var text by remember { mutableStateOf("") }
 
-    BasicTextField(
-        value = text,
-        onValueChange = {
-            text = it
+    Scaffold(
+        topBar = {
+            showTopAppBar(context)
         },
-        modifier = Modifier.padding(10.dp))
+        content = { padding ->
+            BasicTextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding))
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        showCreateNoteButton(onShowListClick, text, notesViewModel)
-        showCancelButton(onShowListClick)
-    }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                showCreateNoteButton(onShowListClick, text, notesViewModel)
+                showCancelButton(onShowListClick)
+            }
+        }
+    )
 }
 
 @Composable
-fun showDataList(notes: List<Note>){
-    LazyColumn {
+fun showDataList(notes: List<Note>, padding: PaddingValues){
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+    ){
         items(items = notes, itemContent = { note ->
             showText(note = note)
         })
@@ -146,56 +186,28 @@ fun showText(note: Note){
 @Composable
 fun showAddButton(
     onNewClick: () -> Unit){
-    Button(
-        onClick = {
-            onNewClick()
-        },
-        border = BorderStroke(1.dp, Color.Transparent),
-        shape = RoundedCornerShape(50),
-        modifier = Modifier.padding(
-            bottom = 6.dp,
-            end = 12.dp)
-    )
-    { Text(
-        text = stringResource(R.string.add_note),
-        fontSize = 14.sp
-    ) }
-}
-
-@Composable
-fun showSendButton(context: Context){
-    Button(
-        onClick = {
-            val notesViewModel = NoteViewModel(context.applicationContext as Application)
-            val notes = notesViewModel.getAllDataForEmail()
-
-            val emailText = StringBuilder()
-            for(note in notes) {
-                emailText.appendLine(note.date)
-                emailText.appendLine(note.text)
-            }
-
-            val i = Intent(Intent.ACTION_SEND)
-
-            val emailAddress = arrayOf("")
-            i.putExtra(Intent.EXTRA_EMAIL,emailAddress)
-            i.putExtra(Intent.EXTRA_SUBJECT,"Text from Short Notes application")
-            i.putExtra(Intent.EXTRA_TEXT, emailText.toString())
-
-            i.type = "message/rfc822"
-
-            context.startActivity(Intent.createChooser(i,"Choose an Email client : "))
-        },
-        border = BorderStroke(1.dp, Color.Transparent),
-        shape = RoundedCornerShape(50),
-        modifier = Modifier.padding(
-            bottom = 6.dp,
-            end = 12.dp)
-    )
-    { Text(
-        text = stringResource(R.string.send_email),
-        fontSize = 14.sp
-    ) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.End
+    ) {
+        Button(
+            onClick = {
+                onNewClick()
+            },
+            border = BorderStroke(1.dp, Color.Transparent),
+            shape = RoundedCornerShape(50),
+            modifier = Modifier.padding(
+                bottom = 6.dp,
+                end = 12.dp)
+        )
+        { Text(
+            text = stringResource(R.string.add_note),
+            fontSize = 14.sp
+        ) }
+    }
 }
 
 @Composable
@@ -239,4 +251,26 @@ fun showCancelButton(
         text = stringResource(R.string.cancel),
         fontSize = 14.sp
     ) }
+}
+
+fun sendEmail(context: Context, emailTitle: String) {
+    val notesViewModel = NoteViewModel(context.applicationContext as Application)
+    val notes = notesViewModel.getAllDataForEmail()
+
+    val emailText = StringBuilder()
+    for(note in notes) {
+        emailText.appendLine(note.date)
+        emailText.appendLine(note.text)
+    }
+
+    val i = Intent(Intent.ACTION_SEND)
+
+    val emailAddress = arrayOf("")
+    i.putExtra(Intent.EXTRA_EMAIL,emailAddress)
+    i.putExtra(Intent.EXTRA_SUBJECT, emailTitle)
+    i.putExtra(Intent.EXTRA_TEXT, emailText.toString())
+
+    i.type = "message/rfc822"
+
+    context.startActivity(Intent.createChooser(i,"Choose an Email client : "))
 }
