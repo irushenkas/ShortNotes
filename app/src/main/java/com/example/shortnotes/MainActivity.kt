@@ -31,6 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.shortnotes.dto.Note
+import com.example.shortnotes.viewmodel.EmailViewModel
 import com.example.shortnotes.viewmodel.NoteViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,9 +67,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun showTopAppBar(context: Context) {
     val emailTitle = stringResource(R.string.email_title)
+    val previousEmail = getEmail(context)
 
     val showDialog = remember { mutableStateOf(false) }
-    var email = remember { mutableStateOf("test") }
+    var email = remember { mutableStateOf(previousEmail) }
 
     if(showDialog.value) {
         showEmailDialog(
@@ -77,7 +79,9 @@ fun showTopAppBar(context: Context) {
                 showDialog.value = false
             },
             onConfirmation = {
-                var test = email.value
+                if(previousEmail != email.value) {
+                    saveEmail(context, email.value)
+                }
                 showDialog.value = false
             })
     }
@@ -317,13 +321,11 @@ fun showEmailDialog(
                     text = "This is a dialog with buttons and an image.",
                     modifier = Modifier.padding(4.dp),
                 )
-                var text  = email
 
                 TextField(
-                    value = text.value,
+                    value = email.value,
                     onValueChange = {
-                        text.value = it
-                        email.value = text.value },
+                        email.value = it },
                     singleLine = true
                 )
                 Row(
@@ -347,4 +349,15 @@ fun showEmailDialog(
             }
         }
     }
+}
+
+fun saveEmail(context: Context, email: String) {
+    val emailViewModel = EmailViewModel(context.applicationContext as Application)
+    emailViewModel.save(email)
+}
+
+fun getEmail(context: Context): String {
+    val emailViewModel = EmailViewModel(context.applicationContext as Application)
+    val email = emailViewModel.getEmail()
+    return email.name
 }
