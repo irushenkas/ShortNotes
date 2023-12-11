@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -66,12 +67,29 @@ class MainActivity : ComponentActivity() {
 fun showTopAppBar(context: Context) {
     val emailTitle = stringResource(R.string.email_title)
 
+    val showDialog = remember { mutableStateOf(false) }
+    var email = remember { mutableStateOf("test") }
+
+    if(showDialog.value) {
+        showEmailDialog(
+            email,
+            onDismissRequest = {
+                showDialog.value = false
+            },
+            onConfirmation = {
+                var test = email.value
+                showDialog.value = false
+            })
+    }
+
     TopAppBar(
         title = {
             Text(stringResource(R.string.app_title))
         },
         actions = {
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = {
+                showDialog.value = true
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
                     contentDescription = "Localized description"
@@ -273,4 +291,60 @@ fun sendEmail(context: Context, emailTitle: String) {
     i.type = "message/rfc822"
 
     context.startActivity(Intent.createChooser(i,"Choose an Email client : "))
+}
+
+@Composable
+fun showEmailDialog(
+    email: MutableState<String>,
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "This is a dialog with buttons and an image.",
+                    modifier = Modifier.padding(4.dp),
+                )
+                var text  = email
+
+                TextField(
+                    value = text.value,
+                    onValueChange = {
+                        text.value = it
+                        email.value = text.value },
+                    singleLine = true
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    TextButton(
+                        onClick = { onDismissRequest() },
+                        modifier = Modifier.padding(8.dp),
+                    ) {
+                        Text("Dismiss")
+                    }
+                    TextButton(
+                        onClick = { onConfirmation() },
+                        modifier = Modifier.padding(8.dp),
+                    ) {
+                        Text("Confirm")
+                    }
+                }
+            }
+        }
+    }
 }
