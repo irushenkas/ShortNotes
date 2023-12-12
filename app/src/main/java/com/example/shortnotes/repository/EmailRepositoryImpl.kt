@@ -11,8 +11,13 @@ class EmailRepositoryImpl(
 
     private val dao = AppDb.getInstance(context = context).emailDao()
 
-    override fun get(): Email {
-        return dao.getEmail().toDto()
+    override fun get(): Email? {
+        val email = dao.getEmail()
+        if(email != null) {
+            return dao.getEmail().toDto()
+        } else {
+            return null
+        }
     }
 
     override fun save(email: Email) {

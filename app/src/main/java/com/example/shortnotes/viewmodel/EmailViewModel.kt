@@ -17,7 +17,7 @@ class EmailViewModel(application: Application) : AndroidViewModel(application) {
         emailRepository.removeById(id)
     }
 
-    fun getEmail(): Email {
+    fun getEmail(): Email? {
         return emailRepository.get()
     }
 }

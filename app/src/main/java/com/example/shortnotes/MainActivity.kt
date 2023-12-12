@@ -359,5 +359,9 @@ fun saveEmail(context: Context, email: String) {
 fun getEmail(context: Context): String {
     val emailViewModel = EmailViewModel(context.applicationContext as Application)
     val email = emailViewModel.getEmail()
-    return email.name
+    if(email != null) {
+        return email.name
+    } else {
+        return String()
+    }
 }
