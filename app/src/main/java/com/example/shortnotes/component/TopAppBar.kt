@@ -17,6 +17,7 @@ import com.example.shortnotes.R
 @Composable
 fun showTopAppBar(context: Context) {
     val emailTitle = stringResource(R.string.email_title)
+    val emailChooseTitle = stringResource(R.string.email_choose_client)
     val previousEmail = getEmail(context)
 
     val showDialog = remember { mutableStateOf(false) }
@@ -50,7 +51,7 @@ fun showTopAppBar(context: Context) {
                 )
             }
             IconButton(onClick = {
-                sendEmail(context, emailTitle)
+                sendEmail(context, emailTitle, emailChooseTitle)
             }) {
                 Icon(
                     imageVector = Icons.Filled.Email,

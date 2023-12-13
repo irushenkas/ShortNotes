@@ -1,4 +1,4 @@
-package com.example.shortnotes
+package com.example.shortnotes.component
 
 import android.app.Application
 import android.os.Bundle
@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.shortnotes.component.*
 import com.example.shortnotes.viewmodel.NoteViewModel
 
 class MainActivity : ComponentActivity() {

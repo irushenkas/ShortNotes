@@ -6,7 +6,7 @@ import android.content.Intent
 import com.example.shortnotes.viewmodel.EmailViewModel
 import com.example.shortnotes.viewmodel.NoteViewModel
 
-fun sendEmail(context: Context, emailTitle: String) {
+fun sendEmail(context: Context, emailTitle: String, emailChooseTitle: String) {
     val notesViewModel = NoteViewModel(context.applicationContext as Application)
     val notes = notesViewModel.getAllDataForEmail()
 
@@ -18,14 +18,18 @@ fun sendEmail(context: Context, emailTitle: String) {
 
     val i = Intent(Intent.ACTION_SEND)
 
-    val emailAddress = arrayOf("")
+    val email = getEmail(context)
+    if(email.isEmpty()) {
+        return
+    }
+    val emailAddress = arrayOf(email)
     i.putExtra(Intent.EXTRA_EMAIL,emailAddress)
     i.putExtra(Intent.EXTRA_SUBJECT, emailTitle)
     i.putExtra(Intent.EXTRA_TEXT, emailText.toString())
 
     i.type = "message/rfc822"
 
-    context.startActivity(Intent.createChooser(i,"Choose an Email client : "))
+    context.startActivity(Intent.createChooser(i, emailChooseTitle))
 }
 
 fun saveEmail(context: Context, email: String) {
@@ -36,9 +40,5 @@ fun saveEmail(context: Context, email: String) {
 fun getEmail(context: Context): String {
     val emailViewModel = EmailViewModel(context.applicationContext as Application)
     val email = emailViewModel.getEmail()
-    if(email != null) {
-        return email.name
-    } else {
-        return String()
-    }
+    return email?.name ?: String()
 }
