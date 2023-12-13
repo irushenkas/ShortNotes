@@ -13,10 +13,10 @@ class EmailRepositoryImpl(
 
     override fun get(): Email? {
         val email = dao.getEmail()
-        if(email != null) {
-            return dao.getEmail().toDto()
+        return if(email != null) {
+            dao.getEmail().toDto()
         } else {
-            return null
+            null
         }
     }
 
