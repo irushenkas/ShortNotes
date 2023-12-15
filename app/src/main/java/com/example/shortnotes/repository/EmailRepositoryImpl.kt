@@ -1,15 +1,13 @@
 package com.example.shortnotes.repository
 
-import android.content.Context
-import com.example.shortnotes.db.AppDb
+import com.example.shortnotes.dao.EmailDao
 import com.example.shortnotes.dto.Email
 import com.example.shortnotes.entity.EmailEntity
+import javax.inject.Inject
 
-class EmailRepositoryImpl(
-    context: Context,
+class EmailRepositoryImpl @Inject constructor(
+    private val dao: EmailDao
 ) : EmailRepository {
-
-    private val dao = AppDb.getInstance(context = context).emailDao()
 
     override fun get(): Email? {
         val email = dao.getEmail()

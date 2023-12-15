@@ -13,12 +13,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.example.shortnotes.R
+import com.example.shortnotes.viewmodel.EmailViewModel
+import com.example.shortnotes.viewmodel.NoteViewModel
 
 @Composable
-fun showTopAppBar(context: Context) {
+fun showTopAppBar(context: Context, noteViewModel: NoteViewModel, emailViewModel: EmailViewModel) {
     val emailTitle = stringResource(R.string.email_title)
     val emailChooseTitle = stringResource(R.string.email_choose_client)
-    val previousEmail = getEmail(context)
+    val previousEmail = getEmail(emailViewModel)
 
     val showDialog = remember { mutableStateOf(false) }
     var email = remember { mutableStateOf(previousEmail) }
@@ -31,7 +33,7 @@ fun showTopAppBar(context: Context) {
             },
             onConfirmation = {
                 if(previousEmail != email.value) {
-                    saveEmail(context, email.value)
+                    saveEmail(emailViewModel, email.value)
                 }
                 showDialog.value = false
             })
@@ -51,7 +53,7 @@ fun showTopAppBar(context: Context) {
                 )
             }
             IconButton(onClick = {
-                sendEmail(context, emailTitle, emailChooseTitle)
+                sendEmail(context, emailTitle, emailChooseTitle, noteViewModel, emailViewModel)
             }) {
                 Icon(
                     imageVector = Icons.Filled.Email,

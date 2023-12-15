@@ -1,13 +1,15 @@
 package com.example.shortnotes.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.example.shortnotes.dto.Note
 import com.example.shortnotes.repository.NoteRepository
-import com.example.shortnotes.repository.NoteRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class NoteViewModel(application: Application) : AndroidViewModel(application) {
-    private val noteRepository: NoteRepository = NoteRepositoryImpl(application)
+@HiltViewModel
+class NoteViewModel @Inject constructor(
+    private val noteRepository: NoteRepository
+): ViewModel() {
 
     val data = noteRepository.getFlow()
 

@@ -1,13 +1,15 @@
 package com.example.shortnotes.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.example.shortnotes.dto.Email
 import com.example.shortnotes.repository.EmailRepository
-import com.example.shortnotes.repository.EmailRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class EmailViewModel(application: Application) : AndroidViewModel(application) {
-    private val emailRepository: EmailRepository = EmailRepositoryImpl(application)
+@HiltViewModel
+class EmailViewModel @Inject constructor(
+    private val emailRepository: EmailRepository
+): ViewModel() {
 
     fun save(name: String) {
         emailRepository.save(Email(0, name))

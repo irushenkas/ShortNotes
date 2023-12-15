@@ -1,13 +1,12 @@
 package com.example.shortnotes.component
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import com.example.shortnotes.viewmodel.EmailViewModel
 import com.example.shortnotes.viewmodel.NoteViewModel
 
-fun sendEmail(context: Context, emailTitle: String, emailChooseTitle: String) {
-    val notesViewModel = NoteViewModel(context.applicationContext as Application)
+fun sendEmail(context: Context, emailTitle: String, emailChooseTitle: String,
+              notesViewModel: NoteViewModel, emailViewModel: EmailViewModel) {
     val notes = notesViewModel.getAllDataForEmail()
 
     val emailText = StringBuilder()
@@ -18,7 +17,7 @@ fun sendEmail(context: Context, emailTitle: String, emailChooseTitle: String) {
 
     val i = Intent(Intent.ACTION_SEND)
 
-    val email = getEmail(context)
+    val email = getEmail(emailViewModel)
     if(email.isEmpty()) {
         return
     }
@@ -32,13 +31,11 @@ fun sendEmail(context: Context, emailTitle: String, emailChooseTitle: String) {
     context.startActivity(Intent.createChooser(i, emailChooseTitle))
 }
 
-fun saveEmail(context: Context, email: String) {
-    val emailViewModel = EmailViewModel(context.applicationContext as Application)
+fun saveEmail(emailViewModel: EmailViewModel, email: String) {
     emailViewModel.save(email)
 }
 
-fun getEmail(context: Context): String {
-    val emailViewModel = EmailViewModel(context.applicationContext as Application)
+fun getEmail(emailViewModel: EmailViewModel): String {
     val email = emailViewModel.getEmail()
     return email?.name ?: String()
 }

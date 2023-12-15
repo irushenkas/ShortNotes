@@ -1,17 +1,15 @@
 package com.example.shortnotes.repository
 
-import android.content.Context
-import com.example.shortnotes.db.AppDb
+import com.example.shortnotes.dao.NoteDao
 import com.example.shortnotes.dto.Note
 import com.example.shortnotes.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class NoteRepositoryImpl(
-    context: Context,
+class NoteRepositoryImpl @Inject constructor(
+    private val dao: NoteDao
 ) : NoteRepository {
-
-    private val dao = AppDb.getInstance(context = context).noteDao()
 
     override fun getFlow(): Flow<List<Note>> {
         return dao.getFlow().map { item -> item.map { i->i.toDto() } }
