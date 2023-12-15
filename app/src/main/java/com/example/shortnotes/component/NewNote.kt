@@ -12,22 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shortnotes.R
-import com.example.shortnotes.viewmodel.NoteViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
 fun showCreateNoteButton(
-    onShowListClick: () -> Unit,
-    text: String,
-    noteViewModel: NoteViewModel
+    onSaveClick: () -> Unit
 ){
     Button(
         onClick = {
-            val sdf = SimpleDateFormat("dd.MM.yyyy")
-            val currentDate = sdf.format(Date())
-            noteViewModel.save(text, currentDate)
-            onShowListClick()
+            onSaveClick()
         },
         border = BorderStroke(1.dp, Color.Transparent),
         shape = RoundedCornerShape(50),

@@ -7,4 +7,7 @@
     <string name="cancel">Cancel</string>
     <string name="email_title">Text from Short Notes application</string>
     <string name="email_choose_client">Choose an Email client:</string>
+    <string name="email_change_title">Email to send notes</string>
+    <string name="email_change_confirm">Confirm</string>
+    <string name="email_change_cancel">Cancel</string>
 </resources>

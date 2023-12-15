@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.shortnotes.R
 
 @Composable
 fun showEmailDialog(
@@ -34,7 +36,7 @@ fun showEmailDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "This is a dialog with buttons and an image.",
+                    text = stringResource(R.string.email_change_title),
                     modifier = Modifier.padding(4.dp),
                 )
 
@@ -53,13 +55,13 @@ fun showEmailDialog(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        Text("Dismiss")
+                        Text(stringResource(R.string.email_change_cancel))
                     }
                     TextButton(
                         onClick = { onConfirmation() },
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        Text("Confirm")
+                        Text(stringResource(R.string.email_change_confirm))
                     }
                 }
             }

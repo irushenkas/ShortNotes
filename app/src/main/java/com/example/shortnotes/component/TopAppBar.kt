@@ -1,6 +1,5 @@
 package com.example.shortnotes.component
 
-import android.content.Context
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -13,15 +12,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.example.shortnotes.R
-import com.example.shortnotes.viewmodel.EmailViewModel
-import com.example.shortnotes.viewmodel.NoteViewModel
 
 @Composable
-fun showTopAppBar(context: Context, noteViewModel: NoteViewModel, emailViewModel: EmailViewModel) {
-    val emailTitle = stringResource(R.string.email_title)
-    val emailChooseTitle = stringResource(R.string.email_choose_client)
-    val previousEmail = getEmail(emailViewModel)
-
+fun showTopAppBar(
+    previousEmail: String,
+    onSaveEmailClick: (value: String) -> Unit,
+    onSendEmailClick: () -> Unit,
+    ) {
     val showDialog = remember { mutableStateOf(false) }
     var email = remember { mutableStateOf(previousEmail) }
 
@@ -33,7 +30,7 @@ fun showTopAppBar(context: Context, noteViewModel: NoteViewModel, emailViewModel
             },
             onConfirmation = {
                 if(previousEmail != email.value) {
-                    saveEmail(emailViewModel, email.value)
+                    onSaveEmailClick(email.value)
                 }
                 showDialog.value = false
             })
@@ -53,7 +50,7 @@ fun showTopAppBar(context: Context, noteViewModel: NoteViewModel, emailViewModel
                 )
             }
             IconButton(onClick = {
-                sendEmail(context, emailTitle, emailChooseTitle, noteViewModel, emailViewModel)
+                onSendEmailClick()
             }) {
                 Icon(
                     imageVector = Icons.Filled.Email,
