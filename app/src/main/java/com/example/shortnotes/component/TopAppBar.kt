@@ -46,7 +46,7 @@ fun showTopAppBar(
             }) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
-                    contentDescription = "Localized description"
+                    contentDescription = stringResource(R.string.email_change)
                 )
             }
             IconButton(onClick = {
@@ -54,7 +54,7 @@ fun showTopAppBar(
             }) {
                 Icon(
                     imageVector = Icons.Filled.Email,
-                    contentDescription = "Localized description"
+                    contentDescription = stringResource(R.string.email_send)
                 )
             }
         },

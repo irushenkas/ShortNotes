@@ -10,4 +10,6 @@
     <string name="email_change_title">Email to send notes</string>
     <string name="email_change_confirm">Confirm</string>
     <string name="email_change_cancel">Cancel</string>
+    <string name="email_change">Change Email</string>
+    <string name="email_send">Send Email</string>
 </resources>
