@@ -6,7 +6,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,39 +23,77 @@ import com.example.shortnotes.dto.Note
 import com.example.shortnotes.R
 
 @Composable
-fun showDataList(notes: List<Note>, padding: PaddingValues){
+fun showDataList(
+    notes: List<Note>,
+    onRemove: (id: Long) -> Unit,
+    padding: PaddingValues) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
     ){
         items(items = notes, itemContent = { note ->
-            showText(note = note)
+            showNote(note = note, onRemove)
         })
     }
 }
 
 @Composable
-fun showText(note: Note){
-    Column(
+fun showNote(
+    note: Note,
+    onRemove: (id: Long) -> Unit) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 10.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+            .padding(10.dp, 0.dp, 10.dp, 0.dp),
     ) {
-        Text(
-            text = note.date,
+        Column(
             modifier = Modifier
-                .padding(0.dp, 4.dp, 0.dp, 0.dp),
-            textAlign = TextAlign.Left,
-        )
-        Text(
-            text = note.text,
-            fontSize = 20.sp,
+                .padding(all = 0.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = note.date,
+                modifier = Modifier
+                    .padding(0.dp, 12.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Left,
+            )
+        }
+        Column(
             modifier = Modifier
-                .padding(0.dp, 4.dp, 0.dp, 0.dp),
-        )
+                .padding(all = 0.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.End
+        ) {
+            IconButton(onClick = {
+                onRemove(note.id)
+            }) {
+                Icon(
+                    Icons.Filled.Delete,
+                    contentDescription = stringResource(R.string.remove_note),
+                    tint = Color.Gray,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        }
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp, 10.dp, 20.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(all = 0.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = note.text,
+                fontSize = 20.sp
+            )
+        }
     }
 }
 

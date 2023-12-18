@@ -2,6 +2,7 @@
     <string name="app_name">ShortNotes</string>
     <string name="app_title">Short Notes</string>
     <string name="add_note">New</string>
+    <string name="remove_note">Remove</string>
     <string name="send_email">Send Email</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>

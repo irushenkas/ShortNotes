@@ -82,7 +82,12 @@ class MainActivity : ComponentActivity() {
                     })
             },
             content = { padding ->
-                showDataList(notes, padding)
+                showDataList(
+                    notes,
+                    onRemove = fun(id: Long) {
+                        notesViewModel.removeById(id)
+                    },
+                    padding)
                 showAddButton(onNewClick)
             }
         )
