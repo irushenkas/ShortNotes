@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,6 +12,7 @@ import androidx.compose.ui.Modifier
 import com.example.shortnotes.ui.theme.ShortNotesTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -119,15 +119,24 @@ class MainActivity : ComponentActivity() {
                     })
             },
             content = { padding ->
-                BasicTextField(
-                    value = text,
-                    onValueChange = {
-                        text = it
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding))
 
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(all = 10.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Top,
+                ) {
+                    TextField(
+                        value = text,
+                        onValueChange = {
+                            text = it
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding))
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
